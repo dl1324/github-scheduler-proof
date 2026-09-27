@@ -1,0 +1,58 @@
+name: UK Mortgage Rate Trigger Monitor
+
+on:
+  schedule:
+    - cron: "37 8,18 * * 1-5"
+      timezone: "Europe/London"
+  workflow_dispatch:
+    inputs:
+      send_test_email:
+        description: "Send a test/baseline email even if no trigger changed"
+        required: false
+        default: true
+        type: boolean
+
+permissions:
+  contents: write
+
+concurrency:
+  group: mortgage-rate-monitor
+  cancel-in-progress: false
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Check triggers and update forecast
+        env:
+          EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
+          EMAIL_TO: ${{ secrets.EMAIL_TO }}
+          EMAIL_APP_PASSWORD: ${{ secrets.EMAIL_APP_PASSWORD }}
+          TEST_EMAIL: ${{ github.event_name == 'workflow_dispatch' && inputs.send_test_email == true }}
+        run: python monitor.py
+
+      - name: Save monitor state
+        run: |
+          if git diff --quiet -- state.json; then
+            echo "No state change to save."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add state.json
+          git commit -m "Update mortgage trigger state"
+          git push
