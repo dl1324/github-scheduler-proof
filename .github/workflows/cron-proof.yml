@@ -1,23 +1,17 @@
-name: Cron proof
+name: Cron proof (retired)
+
+# Retired on 27 September 2026.
+# This workflow has no scheduled trigger and does not run automatically.
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "3,13,23,33,43,53 * * * *"
 
 permissions:
   contents: read
 
 jobs:
-  proof:
+  retired:
+    if: ${{ false }}
     runs-on: ubuntu-latest
-    timeout-minutes: 2
-
     steps:
-      - name: Record trigger
-        shell: bash
-        run: |
-          echo "event=${{ github.event_name }}"
-          echo "utc=$(date -u '+%Y-%m-%dT%H:%M:%SZ')"
-          echo "london=$(TZ=Europe/London date '+%Y-%m-%dT%H:%M:%S%z')"
-          echo "Independent cron proof completed successfully."
+      - run: echo "This retired workflow is intentionally disabled."
