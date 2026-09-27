@@ -1,0 +1,66 @@
+{
+  "labels": {
+    "headline_cpi": "Headline CPI",
+    "core_cpi": "Core CPI",
+    "services_cpi": "Services CPI",
+    "wage_growth": "Private regular wage growth",
+    "unemployment": "Unemployment",
+    "swap_2y": "2Y SONIA swap",
+    "swap_5y": "5Y SONIA swap"
+  },
+  "baseline": {
+    "bank_rate": 3.75,
+    "headline_cpi": 3.1,
+    "core_cpi": 2.6,
+    "services_cpi": 3.4,
+    "wage_growth": 2.9,
+    "unemployment": 4.9,
+    "swap_2y": 4.63,
+    "swap_5y": 4.79
+  },
+  "triggers": {
+    "headline_cpi": {"lower_rate": 2.5, "higher_rate": 3.5, "direction": "normal"},
+    "core_cpi": {"lower_rate": 2.3, "higher_rate": 3.0, "direction": "normal"},
+    "services_cpi": {"lower_rate": 3.0, "higher_rate": 3.8, "direction": "normal"},
+    "wage_growth": {"lower_rate": 3.0, "higher_rate": 4.25, "direction": "normal"},
+    "unemployment": {"lower_rate": 5.3, "higher_rate": 4.5, "direction": "inverse"},
+    "swap_2y": {"lower_rate": 4.0, "higher_rate": 5.0, "direction": "normal"},
+    "swap_5y": {"lower_rate": 4.1, "higher_rate": 5.0, "direction": "normal"}
+  },
+  "weights": {
+    "headline_cpi": 1,
+    "core_cpi": 2,
+    "services_cpi": 3,
+    "wage_growth": 3,
+    "unemployment": 2,
+    "swap_2y": 4,
+    "swap_5y": 4
+  },
+  "forecast_anchors": {
+    "6 months": {
+      "mortgage_2y": 5.15,
+      "mortgage_5y": 5.20,
+      "pressure_sensitivity": 0.45,
+      "swap_sensitivity": 0.60,
+      "range_half_width": 0.25
+    },
+    "12 months": {
+      "mortgage_2y": 4.80,
+      "mortgage_5y": 4.90,
+      "pressure_sensitivity": 0.40,
+      "swap_sensitivity": 0.50,
+      "range_half_width": 0.30
+    },
+    "2 years": {
+      "mortgage_2y": 4.35,
+      "mortgage_5y": 4.50,
+      "pressure_sensitivity": 0.30,
+      "swap_sensitivity": 0.35,
+      "range_half_width": 0.35
+    }
+  },
+  "alert_rules": {
+    "swap_move_pp": 0.15,
+    "forecast_move_pp": 0.15
+  }
+}
