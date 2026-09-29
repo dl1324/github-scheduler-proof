@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-09-28T22:37:49.842395+00:00",
+  "last_checked": "2026-09-29T14:18:39.712512+00:00",
   "latest_values": {
     "headline_cpi": {
       "value": 3.1,
@@ -28,16 +28,16 @@
     },
     "bank_rate": {
       "value": 3.75,
-      "period": "2026-09-28",
+      "period": "2026-09-29",
       "source": "Bank of England"
     },
     "swap_2y": {
-      "value": 4.58,
+      "value": 4.64,
       "period": "previous UK business-day close",
       "source": "BlueGamma public SONIA swap table"
     },
     "swap_5y": {
-      "value": 4.76,
+      "value": 4.81,
       "period": "previous UK business-day close",
       "source": "BlueGamma public SONIA swap table"
     }
@@ -54,39 +54,39 @@
   "latest_pressure_index": -0.1579,
   "latest_forecast": {
     "6 months": {
-      "mortgage_2y_mid": 5.05,
+      "mortgage_2y_mid": 5.08,
       "mortgage_2y_range": [
-        4.8,
-        5.3
+        4.83,
+        5.33
       ],
-      "mortgage_5y_mid": 5.11,
+      "mortgage_5y_mid": 5.14,
       "mortgage_5y_range": [
-        4.86,
-        5.36
+        4.89,
+        5.39
       ]
     },
     "12 months": {
-      "mortgage_2y_mid": 4.71,
+      "mortgage_2y_mid": 4.74,
       "mortgage_2y_range": [
-        4.41,
-        5.01
+        4.44,
+        5.04
       ],
-      "mortgage_5y_mid": 4.82,
+      "mortgage_5y_mid": 4.85,
       "mortgage_5y_range": [
-        4.52,
-        5.12
+        4.55,
+        5.15
       ]
     },
     "2 years": {
-      "mortgage_2y_mid": 4.29,
+      "mortgage_2y_mid": 4.31,
       "mortgage_2y_range": [
-        3.94,
-        4.64
+        3.96,
+        4.66
       ],
-      "mortgage_5y_mid": 4.44,
+      "mortgage_5y_mid": 4.46,
       "mortgage_5y_range": [
-        4.09,
-        4.79
+        4.11,
+        4.81
       ]
     }
   },
