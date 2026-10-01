@@ -1,13 +1,15 @@
 # UK Mortgage Outlook & Decision Monitor
 
-Automated UK mortgage-rate monitor designed to answer two questions:
+Automated UK mortgage decision-support monitor for a 60% LTV borrower. It is designed to answer:
 
-1. **What are mortgage rates doing now?**
-2. **What are they likely to be in 6 months, 12 months and 2 years, and what does that imply for fixing decisions?**
+1. What are UK mortgage rates doing now?
+2. What are 2-year and 5-year fixes likely to cost in 6 months, 12 months and 2 years?
+3. Is fixing for 2 years or 5 years currently more attractive on the model?
+4. Could using a flexible tracker for 3, 6 or 12 months before fixing improve the expected outcome?
 
-## What it monitors
+## Data monitored
 
-### Economic data
+### Economy
 - Bank of England Bank Rate
 - Headline CPI
 - Core CPI
@@ -15,147 +17,123 @@ Automated UK mortgage-rate monitor designed to answer two questions:
 - Private-sector regular wage growth
 - UK unemployment
 
-### Market pricing
-- 2-year SONIA swap rate
-- 5-year SONIA swap rate
-- 2-year UK gilt yield
-- 5-year UK gilt yield
-- 10-year UK gilt yield
+### Wholesale and bond markets
+- 2-year SONIA swap
+- 5-year SONIA swap
+- 2-year gilt yield
+- 5-year gilt yield
+- 10-year gilt yield
 
-### Actual mortgage pricing
-The monitor reads average UK home-buyer fixed mortgage rates from Rightmove/Podium for:
+SONIA swaps remain the primary fixed-mortgage pricing signal. Gilt yields are deliberately lower-weight supplementary signals for term premium, fiscal risk and global bond-market stress.
+
+The gilt feed now uses the Bank of England's official daily nominal gilt spot-curve workbook. Configured fallback values are only used if that source cannot be read.
+
+### Mortgage market
+Two different mortgage datasets are used for different jobs:
+
+**Market averages**
+- Rightmove / Podium 2-year and 5-year averages by LTV
+- used to calibrate the overall mortgage market and lender-margin environment
+
+**Competitive products used in strategy comparisons**
+- competitive 60% LTV 2-year remortgage fix
+- competitive 60% LTV 5-year remortgage fix
+- cheapest tracked 60% LTV tracker
+- separate flexible/no-ERC tracker proxy for the wait-before-fixing model
+
+The model keeps the cheapest tracker and the flexible tracker separate because the absolute cheapest tracker may have an early repayment charge and therefore may be unsuitable for switching into a fix after only a few months.
+
+## Forecast
+
+The email shows model ranges for:
+
+- Bank Rate
+- typical 2-year fixes
+- typical 5-year fixes
+- a flexible tracker proxy
+
+at:
+
+- 6 months
+- 12 months
+- 2 years
+
+The fixed-rate forecast combines inflation/labour data, SONIA swaps, gilt yields and changes in actual mortgage pricing. The tracker projection is based mainly on the modelled Bank Rate path plus the current tracker margin.
+
+## Decision engine
+
+The model compares strategies over a common five-year period using **mortgage interest plus relevant product/refinance fees**. Principal repayments are not treated as a cost.
+
+Current default assumptions in `config.json`:
 
 - 60% LTV
-- 75% LTV
-- 90% LTV
-- 95% LTV
-
-for both 2-year and 5-year fixes.
-
-If the live mortgage page cannot be read, configured fallback rates are used and the email flags the source warning.
-
-## How the forecast works
-
-SONIA swaps remain the most important direct input because fixed mortgage pricing is closely linked to the relevant swap tenor:
-
-- 2-year fixes are most sensitive to the 2-year SONIA swap
-- 5-year fixes are most sensitive to the 5-year SONIA swap
-
-The model then adjusts for:
-
-- inflation pressure
-- wage pressure
-- unemployment
-- gilt yields / term-premium and fiscal-market stress
-- changes in actual mortgage pricing that may reflect lender margins and competition
-
-Gilts deliberately receive a lower weight than SONIA swaps so correlated bond-market moves are not double-counted excessively.
-
-## Forecast output
-
-Each alert contains scenario-model ranges for:
-
-- 6-month typical 2-year fixed mortgage
-- 6-month typical 5-year fixed mortgage
-- 12-month typical 2-year fixed mortgage
-- 12-month typical 5-year fixed mortgage
-- 2-year-ahead typical 2-year fixed mortgage
-- 2-year-ahead typical 5-year fixed mortgage
-
-These are forecast ranges, not lender quotes.
-
-## Decision guide: 2-year vs 5-year fix
-
-The email now includes a break-even calculation.
-
-Using the assumptions in `config.json`, it calculates the approximate mortgage rate you would need to obtain when refinancing after a 2-year fix for the 2-year route to cost less than taking today's 5-year fix over the same five-year period.
-
-The default illustration is:
-
-- 75% LTV
 - £200,000 repayment mortgage
 - 25-year remaining term
-- £999 2-year product fee
-- £999 5-year product fee
-- £999 refinancing fee after two years
+- future refinance/fix fee: £1,495
+- tracker exit cost: £0 for the flexible tracker proxy
+- tracker waiting periods: 3, 6 and 12 months
 
-The comparison uses mortgage interest plus fees rather than treating principal repayments as a cost.
+### Strategies shown
 
-The email then compares that break-even rate with a modelled refinancing-rate proxy derived from the 2-year-ahead forecast.
+1. **5-year fix now**
+2. **2-year fix now, then modelled refinance after two years**
+3. **Flexible tracker for 3 months, then modelled 5-year fix**
+4. **Flexible tracker for 6 months, then modelled 5-year fix**
+5. **Flexible tracker for 12 months, then modelled 5-year fix**
 
-Change these values under `decision_assumptions` in `config.json` when you want the calculation to reflect a real mortgage decision.
+For every tracker-wait period the email shows:
 
-## Trigger levels
+- projected tracker rate at the point of switching
+- modelled 5-year fixed rate at that point
+- the **break-even future 5-year fixed rate** that would be required for waiting to beat fixing for five years today
+- expected five-year interest + fees
+- a plain-English model signal
 
-Thresholds are held in `config.json` and can be changed without modifying Python.
+This makes the key question explicit. For example, if waiting six months only beats today's 5-year fix when a 5-year deal falls below 4.5%, but the model expects 4.9%, the monitor will show that the wait strategy does not currently clear its break-even hurdle.
 
-| Indicator | Lower-rate signal | Higher-rate signal |
-|---|---:|---:|
-| Headline CPI | <= 2.50% | >= 3.50% |
-| Core CPI | <= 2.30% | >= 3.00% |
-| Services CPI | <= 3.00% | >= 3.80% |
-| Private regular wage growth | <= 3.00% | >= 4.25% |
-| Unemployment | >= 5.30% | <= 4.50% |
-| 2Y SONIA swap | <= 4.00% | >= 5.00% |
-| 5Y SONIA swap | <= 4.10% | >= 5.00% |
-| 2Y gilt yield | <= 4.10% | >= 5.00% |
-| 5Y gilt yield | <= 4.20% | >= 5.20% |
-| 10Y gilt yield | <= 4.70% | >= 5.60% |
+## 2-year vs 5-year break-even
 
-## When it emails
+The email also calculates the refinancing rate needed in two years for the 2-year-fix strategy to beat taking today's 5-year fix over the same five-year horizon, including fees.
 
-The repository checks twice each UK weekday at approximately:
+## Alerts
 
-- 08:37 Europe/London
-- 18:37 Europe/London
+The workflow checks at approximately:
 
-It does not email on every run. An email is sent when one or more material conditions occur, including:
+- 08:37 Europe/London, Monday-Friday
+- 18:37 Europe/London, Monday-Friday
 
-1. A trigger band changes.
-2. A 2Y/5Y SONIA swap moves at least 0.15 percentage points cumulatively since the last alert.
-3. A monitored gilt yield moves at least 0.20 percentage points cumulatively since the last alert.
-4. The configured-LTV average mortgage rate moves at least 0.10 percentage points.
-5. A forecast midpoint moves at least 0.15 percentage points.
-6. Bank Rate changes by approximately one normal 0.25 percentage-point MPC step.
-7. A live source fails and the model falls back to configured values.
+It emails when a material change occurs, including:
 
-Changes are measured from the **last emailed alert anchor**, not merely the previous run, so several small moves accumulate until they become material.
+- an economic/market trigger changes band
+- 2Y/5Y SONIA swaps move >= 0.15 percentage points cumulatively since the last alert
+- gilt yields move >= 0.20 percentage points
+- a monitored mortgage/product rate moves >= 0.10 percentage points
+- a forecast midpoint moves >= 0.15 percentage points
+- Bank Rate changes materially
+- a data source fails and the model has to use a fallback
 
-## Email setup
-
-Required GitHub Actions secrets:
-
-- `EMAIL_FROM`
-- `EMAIL_TO`
-- `EMAIL_APP_PASSWORD`
+Movements are compared with the **last emailed alert anchor**, so a series of smaller changes can accumulate into a material alert.
 
 ## Testing
 
 1. Open **Actions**.
-2. Select **UK Mortgage Rate Trigger Monitor**.
+2. Select **UK Mortgage Outlook & Decision Monitor**.
 3. Select **Run workflow**.
 4. Leave **Send a test/baseline email** enabled.
 5. Run on `main`.
 
-The resulting email should contain:
-
-- current mortgage-rate table by LTV
-- 6m / 12m / 2y forecast
-- 2Y-vs-5Y break-even calculation
-- SONIA swaps
-- gilt yields
-- inflation/labour-market dashboard
-- explanation of what changed
+The email should contain current mortgage pricing, fixed/tracker product inputs, the 6m/12m/2y outlook, five-year strategy-cost comparisons, tracker-wait break-even tables and the economic/market dashboard.
 
 ## Files
 
-- `monitor.py` — collection, forecasting, trigger and decision logic
-- `config.json` — thresholds, weights, baseline data and decision assumptions
-- `state.json` — current observations and last emailed alert anchor
+- `monitor_v3.py` — live data, forecasting, tracker/fixed strategy simulation and email generation
+- `monitor.py` — previous v2 engine retained for reference; not used by the scheduled workflow
+- `config.json` — thresholds, weights, fallbacks and decision assumptions
+- `state.json` — latest observations and last emailed alert anchor
 - `.github/workflows/mortgage-monitor.yml` — schedule and manual testing
 
-## Calibration
+## Important limitations
 
-Major recalibration updated **1 October 2026** to add current mortgage-market pricing and 2Y/5Y/10Y gilt-yield signals.
+This is a structured scenario model, not regulated mortgage advice and not a guarantee of future mortgage rates. Product eligibility, ERCs, valuation/legal costs, broker fees, cashback and lender-specific criteria can change the actual best decision. The flexible-tracker waiting strategy is only valid where the selected tracker can genuinely be exited at the intended time without a material ERC.
 
-This is a monitoring and scenario model. Long-horizon interest-rate forecasts are inherently uncertain and should be used as a structured decision aid rather than treated as a guaranteed future mortgage quote.
+Major v3 upgrade: **1 October 2026**.
