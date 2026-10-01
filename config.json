@@ -18,11 +18,11 @@
     "services_cpi": 3.4,
     "wage_growth": 2.9,
     "unemployment": 4.9,
-    "swap_2y": 4.60,
+    "swap_2y": 4.6,
     "swap_5y": 4.78,
-    "gilt_2y": 4.80,
+    "gilt_2y": 4.8,
     "gilt_5y": 4.91,
-    "gilt_10y": 5.40
+    "gilt_10y": 5.4
   },
   "triggers": {
     "headline_cpi": {"lower_rate": 2.5, "higher_rate": 3.5, "direction": "normal"},
@@ -49,52 +49,67 @@
     "gilt_10y": 3
   },
   "mortgage_market_fallback": {
-    "60": {"2y": 5.10, "5y": 5.08},
+    "60": {"2y": 5.1, "5y": 5.08},
     "75": {"2y": 5.38, "5y": 5.36},
     "90": {"2y": 5.62, "5y": 5.57},
     "95": {"2y": 6.03, "5y": 5.98}
   },
   "decision_product_fallback": {
     "fixed_2y": {"lender": "Nationwide Building Society", "rate": 5.04, "fee": 1499},
+    "fixed_3y": {"lender": "Barclays", "rate": 5.02, "fee": 999},
     "fixed_5y": {"lender": "NatWest", "rate": 5.02, "fee": 1495},
+    "fixed_10y": {"lender": "Santander", "rate": 5.21, "fee": 1224},
     "tracker_cheapest": {"lender": "Halifax", "rate": 4.06, "fee": 1499}
   },
   "flexible_tracker_fallback": {
-    "lender": "Nationwide Building Society", "rate": 4.17, "fee": 999, "margin": 0.42
+    "lender": "Nationwide Building Society",
+    "rate": 4.17,
+    "fee": 999,
+    "margin": 0.42
   },
   "forecast_anchors": {
     "6 months": {
       "mortgage_2y": 5.15,
-      "mortgage_5y": 5.20,
+      "mortgage_5y": 5.2,
       "pressure_sensitivity": 0.45,
-      "swap_sensitivity": 0.60,
-      "gilt_sensitivity": 0.10,
-      "current_market_sensitivity": 0.40,
-      "range_half_width": 0.30
+      "swap_sensitivity": 0.6,
+      "gilt_sensitivity": 0.1,
+      "current_market_sensitivity": 0.4,
+      "range_half_width": 0.3
     },
     "12 months": {
-      "mortgage_2y": 4.80,
-      "mortgage_5y": 4.90,
-      "pressure_sensitivity": 0.40,
-      "swap_sensitivity": 0.50,
+      "mortgage_2y": 4.8,
+      "mortgage_5y": 4.9,
+      "pressure_sensitivity": 0.4,
+      "swap_sensitivity": 0.5,
       "gilt_sensitivity": 0.15,
-      "current_market_sensitivity": 0.30,
+      "current_market_sensitivity": 0.3,
       "range_half_width": 0.35
     },
     "2 years": {
       "mortgage_2y": 4.35,
-      "mortgage_5y": 4.50,
-      "pressure_sensitivity": 0.30,
+      "mortgage_5y": 4.5,
+      "pressure_sensitivity": 0.3,
       "swap_sensitivity": 0.35,
-      "gilt_sensitivity": 0.20,
-      "current_market_sensitivity": 0.20,
+      "gilt_sensitivity": 0.2,
+      "current_market_sensitivity": 0.2,
       "range_half_width": 0.45
     }
   },
   "bank_rate_forecast_anchors": {
-    "6 months": {"bank_rate": 4.10, "pressure_sensitivity": 0.45, "swap_sensitivity": 0.45},
-    "12 months": {"bank_rate": 4.00, "pressure_sensitivity": 0.40, "swap_sensitivity": 0.40},
-    "2 years": {"bank_rate": 3.65, "pressure_sensitivity": 0.30, "swap_sensitivity": 0.30}
+    "6 months": {"bank_rate": 4.1, "pressure_sensitivity": 0.45, "swap_sensitivity": 0.45},
+    "12 months": {"bank_rate": 4.0, "pressure_sensitivity": 0.4, "swap_sensitivity": 0.4},
+    "2 years": {"bank_rate": 3.65, "pressure_sensitivity": 0.3, "swap_sensitivity": 0.3}
+  },
+  "scenario_shifts": {
+    "lower": {"fixed_pp": -0.75, "bank_pp": -0.75},
+    "base": {"fixed_pp": 0.0, "bank_pp": 0.0},
+    "higher": {"fixed_pp": 1.0, "bank_pp": 1.0}
+  },
+  "long_horizon_assumptions": {
+    "year5_5y_fix": 4.5,
+    "lower_shift_pp": -1.0,
+    "higher_shift_pp": 1.0
   },
   "decision_assumptions": {
     "ltv": 60,
@@ -103,12 +118,14 @@
     "refinance_fee": 1495,
     "future_fix_fee": 1495,
     "tracker_exit_cost": 0,
-    "tracker_wait_months": [3, 6, 12]
+    "tracker_wait_months": [3, 6, 12],
+    "fix_trigger_5y_rate": 4.5,
+    "fix_trigger_max_wait_months": 24
   },
   "alert_rules": {
     "swap_move_pp": 0.15,
-    "gilt_move_pp": 0.20,
-    "mortgage_move_pp": 0.10,
+    "gilt_move_pp": 0.2,
+    "mortgage_move_pp": 0.1,
     "forecast_move_pp": 0.15
   }
 }
