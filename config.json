@@ -84,7 +84,7 @@
     }
   },
   "decision_assumptions": {
-    "ltv": 75,
+    "ltv": 60,
     "loan_amount": 200000,
     "term_years": 25,
     "two_year_fee": 999,
