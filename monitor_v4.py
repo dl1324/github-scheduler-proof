@@ -26,10 +26,11 @@ def hoa_product(heading_phrase, ltv, fallback):
         if table:
             for tr in table.find_all("tr"):
                 cells = [c.get_text(" ", strip=True) for c in tr.find_all(["th", "td"])]
-                if len(cells) < 7:
+                if len(cells) < 3:
                     continue
-                max_ltv = base.percent_number(cells[6])
-                if max_ltv is None or max_ltv < ltv:
+                pct_vals = [base.percent_number(c) for c in cells]
+                ltv_vals = [v for v in pct_vals if v is not None and 50 <= v <= 100]
+                if not ltv_vals or max(ltv_vals) < ltv:
                     continue
                 rate = base.percent_number(cells[1])
                 fee = base.money_number(cells[2])
