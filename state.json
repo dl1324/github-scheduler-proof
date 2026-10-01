@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-10-01T20:56:00.844719+00:00",
+  "last_checked": "2026-10-01T21:17:14.421209+00:00",
   "latest_values": {
     "headline_cpi": {
       "value": 3.1,
@@ -42,19 +42,19 @@
       "source": "BlueGamma public SONIA swap table"
     },
     "gilt_2y": {
-      "value": 4.8,
-      "period": "fallback",
-      "source": "config fallback"
+      "value": 4.662461173697973,
+      "period": "2026-09-30",
+      "source": "Bank of England nominal gilt spot curve"
     },
     "gilt_5y": {
-      "value": 4.91,
-      "period": "fallback",
-      "source": "config fallback"
+      "value": 4.941457350752605,
+      "period": "2026-09-30",
+      "source": "Bank of England nominal gilt spot curve"
     },
     "gilt_10y": {
-      "value": 5.4,
-      "period": "fallback",
-      "source": "config fallback"
+      "value": 5.4028076849434825,
+      "period": "2026-09-30",
+      "source": "Bank of England nominal gilt spot curve"
     }
   },
   "mortgage_market": {
@@ -68,16 +68,47 @@
         "5y": 5.36
       },
       "90": {
-        "2y": 5.62,
-        "5y": 5.57
+        "2y": 4.92,
+        "5y": 5.23
       },
       "95": {
-        "2y": 6.03,
-        "5y": 5.98
+        "2y": 5.38,
+        "5y": 5.49
       }
     },
     "period": "October 1, 2026",
     "source": "Rightmove / Podium average home-buyer rates"
+  },
+  "decision_products": {
+    "fixed_2y": {
+      "lender": "RECOMMENDED PROVIDER Nationwide Building Society",
+      "rate": 5.04,
+      "fee": 1499.0,
+      "source": "Which? / Moneyfacts daily remortgage table"
+    },
+    "fixed_5y": {
+      "lender": "RECOMMENDED PROVIDER NatWest",
+      "rate": 5.02,
+      "fee": 1495.0,
+      "source": "Which? / Moneyfacts daily remortgage table"
+    },
+    "tracker_cheapest": {
+      "lender": "Halifax",
+      "rate": 4.06,
+      "fee": 1499.0,
+      "source": "Which? / Moneyfacts daily remortgage table"
+    },
+    "period": "updated daily",
+    "source": "Which? tables using Moneyfacts data"
+  },
+  "flexible_tracker": {
+    "lender": "Nationwide BS",
+    "rate": 4.17,
+    "fee": 1014.0,
+    "margin": 0.42,
+    "erc": 0.0,
+    "source": "HomeOwners Alliance / MAB tracker table; Nationwide no-ERC policy",
+    "period": "current table"
   },
   "latest_bands": {
     "headline_cpi": "NEUTRAL",
@@ -106,38 +137,119 @@
       ]
     },
     "12 months": {
-      "mortgage_2y_mid": 4.76,
+      "mortgage_2y_mid": 4.75,
       "mortgage_2y_range": [
-        4.41,
-        5.11
+        4.4,
+        5.1
       ],
-      "mortgage_5y_mid": 4.86,
+      "mortgage_5y_mid": 4.85,
       "mortgage_5y_range": [
-        4.51,
-        5.21
+        4.5,
+        5.2
       ]
     },
     "2 years": {
-      "mortgage_2y_mid": 4.32,
+      "mortgage_2y_mid": 4.31,
       "mortgage_2y_range": [
-        3.87,
-        4.77
+        3.86,
+        4.76
       ],
-      "mortgage_5y_mid": 4.47,
+      "mortgage_5y_mid": 4.46,
       "mortgage_5y_range": [
-        4.02,
-        4.92
+        4.01,
+        4.91
       ]
     }
   },
+  "latest_bank_rate_forecast": {
+    "6 months": 4.05,
+    "12 months": 3.96,
+    "2 years": 3.62
+  },
   "latest_decision_view": {
     "ltv": 60,
-    "current_2y": 5.1,
-    "current_5y": 5.08,
-    "break_even_refi_rate": 4.89,
-    "model_refi_proxy": 4.39,
-    "margin": 0.5,
-    "signal": "Modelled future refinancing rates are below the 2Y-vs-5Y break-even."
+    "fixed_2y": {
+      "lender": "RECOMMENDED PROVIDER Nationwide Building Society",
+      "rate": 5.04,
+      "fee": 1499.0,
+      "source": "Which? / Moneyfacts daily remortgage table"
+    },
+    "fixed_5y": {
+      "lender": "RECOMMENDED PROVIDER NatWest",
+      "rate": 5.02,
+      "fee": 1495.0,
+      "source": "Which? / Moneyfacts daily remortgage table"
+    },
+    "tracker_cheapest": {
+      "lender": "Halifax",
+      "rate": 4.06,
+      "fee": 1499.0,
+      "source": "Which? / Moneyfacts daily remortgage table"
+    },
+    "tracker_flexible": {
+      "lender": "Nationwide BS",
+      "rate": 4.17,
+      "fee": 1014.0,
+      "margin": 0.42,
+      "erc": 0.0,
+      "source": "HomeOwners Alliance / MAB tracker table; Nationwide no-ERC policy",
+      "period": "current table"
+    },
+    "break_even_refi_rate_2v5": 4.74,
+    "model_refi_proxy_2y": 4.33,
+    "wait_scenarios": [
+      {
+        "months": 3,
+        "projected_tracker_rate_at_fix": 4.32,
+        "model_5y_fix_at_wait": 5.05,
+        "break_even_5y_fix_at_wait": 4.95,
+        "expected_5y_cost": 49894.0,
+        "signal": "Model path is above break-even: the 5Y fix now is cheaper than waiting under these assumptions."
+      },
+      {
+        "months": 6,
+        "projected_tracker_rate_at_fix": 4.47,
+        "model_5y_fix_at_wait": 5.09,
+        "break_even_5y_fix_at_wait": 4.99,
+        "expected_5y_cost": 49910.0,
+        "signal": "Model path is above break-even: the 5Y fix now is cheaper than waiting under these assumptions."
+      },
+      {
+        "months": 12,
+        "projected_tracker_rate_at_fix": 4.38,
+        "model_5y_fix_at_wait": 4.79,
+        "break_even_5y_fix_at_wait": 5.06,
+        "expected_5y_cost": 46898.0,
+        "signal": "Model path is below break-even: waiting on the flexible tracker is cheaper than a 5Y fix now under these assumptions."
+      }
+    ],
+    "strategies": [
+      {
+        "name": "5Y fix now",
+        "expected_cost": 49003.0,
+        "difference_vs_lowest": 2323.0
+      },
+      {
+        "name": "2Y fix now + modelled refinance",
+        "expected_cost": 46680.0,
+        "difference_vs_lowest": 0.0
+      },
+      {
+        "name": "Flexible tracker 3m \u2192 5Y fix",
+        "expected_cost": 49894.0,
+        "difference_vs_lowest": 3214.0
+      },
+      {
+        "name": "Flexible tracker 6m \u2192 5Y fix",
+        "expected_cost": 49910.0,
+        "difference_vs_lowest": 3230.0
+      },
+      {
+        "name": "Flexible tracker 12m \u2192 5Y fix",
+        "expected_cost": 46898.0,
+        "difference_vs_lowest": 218.0
+      }
+    ]
   },
   "alert_anchor": {
     "values": {
