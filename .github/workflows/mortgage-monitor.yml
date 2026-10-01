@@ -37,7 +37,7 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Validate Python
-        run: python -m py_compile monitor_v3.py monitor_entrypoint.py
+        run: python -m py_compile monitor_v3.py monitor_v4.py
 
       - name: Check market, compare strategies and update outlook
         env:
@@ -45,7 +45,7 @@ jobs:
           EMAIL_TO: ${{ secrets.EMAIL_TO }}
           EMAIL_APP_PASSWORD: ${{ secrets.EMAIL_APP_PASSWORD }}
           TEST_EMAIL: ${{ github.event_name == 'workflow_dispatch' && inputs.send_test_email == true }}
-        run: python monitor_entrypoint.py
+        run: python monitor_v4.py
 
       - name: Save monitor state
         run: |
