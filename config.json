@@ -54,6 +54,14 @@
     "90": {"2y": 5.62, "5y": 5.57},
     "95": {"2y": 6.03, "5y": 5.98}
   },
+  "decision_product_fallback": {
+    "fixed_2y": {"lender": "Nationwide Building Society", "rate": 5.04, "fee": 1499},
+    "fixed_5y": {"lender": "NatWest", "rate": 5.02, "fee": 1495},
+    "tracker_cheapest": {"lender": "Halifax", "rate": 4.06, "fee": 1499}
+  },
+  "flexible_tracker_fallback": {
+    "lender": "Nationwide Building Society", "rate": 4.17, "fee": 999, "margin": 0.42
+  },
   "forecast_anchors": {
     "6 months": {
       "mortgage_2y": 5.15,
@@ -83,13 +91,19 @@
       "range_half_width": 0.45
     }
   },
+  "bank_rate_forecast_anchors": {
+    "6 months": {"bank_rate": 4.10, "pressure_sensitivity": 0.45, "swap_sensitivity": 0.45},
+    "12 months": {"bank_rate": 4.00, "pressure_sensitivity": 0.40, "swap_sensitivity": 0.40},
+    "2 years": {"bank_rate": 3.65, "pressure_sensitivity": 0.30, "swap_sensitivity": 0.30}
+  },
   "decision_assumptions": {
     "ltv": 60,
     "loan_amount": 200000,
     "term_years": 25,
-    "two_year_fee": 999,
-    "five_year_fee": 999,
-    "refinance_fee": 999
+    "refinance_fee": 1495,
+    "future_fix_fee": 1495,
+    "tracker_exit_cost": 0,
+    "tracker_wait_months": [3, 6, 12]
   },
   "alert_rules": {
     "swap_move_pp": 0.15,
