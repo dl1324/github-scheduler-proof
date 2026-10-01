@@ -6,7 +6,10 @@
     "wage_growth": "Private regular wage growth",
     "unemployment": "Unemployment",
     "swap_2y": "2Y SONIA swap",
-    "swap_5y": "5Y SONIA swap"
+    "swap_5y": "5Y SONIA swap",
+    "gilt_2y": "2Y gilt yield",
+    "gilt_5y": "5Y gilt yield",
+    "gilt_10y": "10Y gilt yield"
   },
   "baseline": {
     "bank_rate": 3.75,
@@ -15,8 +18,11 @@
     "services_cpi": 3.4,
     "wage_growth": 2.9,
     "unemployment": 4.9,
-    "swap_2y": 4.63,
-    "swap_5y": 4.79
+    "swap_2y": 4.60,
+    "swap_5y": 4.78,
+    "gilt_2y": 4.80,
+    "gilt_5y": 4.91,
+    "gilt_10y": 5.40
   },
   "triggers": {
     "headline_cpi": {"lower_rate": 2.5, "higher_rate": 3.5, "direction": "normal"},
@@ -25,7 +31,10 @@
     "wage_growth": {"lower_rate": 3.0, "higher_rate": 4.25, "direction": "normal"},
     "unemployment": {"lower_rate": 5.3, "higher_rate": 4.5, "direction": "inverse"},
     "swap_2y": {"lower_rate": 4.0, "higher_rate": 5.0, "direction": "normal"},
-    "swap_5y": {"lower_rate": 4.1, "higher_rate": 5.0, "direction": "normal"}
+    "swap_5y": {"lower_rate": 4.1, "higher_rate": 5.0, "direction": "normal"},
+    "gilt_2y": {"lower_rate": 4.1, "higher_rate": 5.0, "direction": "normal"},
+    "gilt_5y": {"lower_rate": 4.2, "higher_rate": 5.2, "direction": "normal"},
+    "gilt_10y": {"lower_rate": 4.7, "higher_rate": 5.6, "direction": "normal"}
   },
   "weights": {
     "headline_cpi": 1,
@@ -33,8 +42,17 @@
     "services_cpi": 3,
     "wage_growth": 3,
     "unemployment": 2,
-    "swap_2y": 4,
-    "swap_5y": 4
+    "swap_2y": 5,
+    "swap_5y": 5,
+    "gilt_2y": 2,
+    "gilt_5y": 2,
+    "gilt_10y": 3
+  },
+  "mortgage_market_fallback": {
+    "60": {"2y": 5.10, "5y": 5.08},
+    "75": {"2y": 5.38, "5y": 5.36},
+    "90": {"2y": 5.62, "5y": 5.57},
+    "95": {"2y": 6.03, "5y": 5.98}
   },
   "forecast_anchors": {
     "6 months": {
@@ -42,25 +60,41 @@
       "mortgage_5y": 5.20,
       "pressure_sensitivity": 0.45,
       "swap_sensitivity": 0.60,
-      "range_half_width": 0.25
+      "gilt_sensitivity": 0.10,
+      "current_market_sensitivity": 0.40,
+      "range_half_width": 0.30
     },
     "12 months": {
       "mortgage_2y": 4.80,
       "mortgage_5y": 4.90,
       "pressure_sensitivity": 0.40,
       "swap_sensitivity": 0.50,
-      "range_half_width": 0.30
+      "gilt_sensitivity": 0.15,
+      "current_market_sensitivity": 0.30,
+      "range_half_width": 0.35
     },
     "2 years": {
       "mortgage_2y": 4.35,
       "mortgage_5y": 4.50,
       "pressure_sensitivity": 0.30,
       "swap_sensitivity": 0.35,
-      "range_half_width": 0.35
+      "gilt_sensitivity": 0.20,
+      "current_market_sensitivity": 0.20,
+      "range_half_width": 0.45
     }
+  },
+  "decision_assumptions": {
+    "ltv": 75,
+    "loan_amount": 200000,
+    "term_years": 25,
+    "two_year_fee": 999,
+    "five_year_fee": 999,
+    "refinance_fee": 999
   },
   "alert_rules": {
     "swap_move_pp": 0.15,
+    "gilt_move_pp": 0.20,
+    "mortgage_move_pp": 0.10,
     "forecast_move_pp": 0.15
   }
 }
