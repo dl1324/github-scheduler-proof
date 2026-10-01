@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-10-01T14:44:46.533083+00:00",
+  "last_checked": "2026-10-01T20:56:00.844719+00:00",
   "latest_values": {
     "headline_cpi": {
       "value": 3.1,
@@ -40,7 +40,44 @@
       "value": 4.78,
       "period": "previous UK business-day close",
       "source": "BlueGamma public SONIA swap table"
+    },
+    "gilt_2y": {
+      "value": 4.8,
+      "period": "fallback",
+      "source": "config fallback"
+    },
+    "gilt_5y": {
+      "value": 4.91,
+      "period": "fallback",
+      "source": "config fallback"
+    },
+    "gilt_10y": {
+      "value": 5.4,
+      "period": "fallback",
+      "source": "config fallback"
     }
+  },
+  "mortgage_market": {
+    "rates": {
+      "60": {
+        "2y": 5.1,
+        "5y": 5.08
+      },
+      "75": {
+        "2y": 5.38,
+        "5y": 5.36
+      },
+      "90": {
+        "2y": 5.62,
+        "5y": 5.57
+      },
+      "95": {
+        "2y": 6.03,
+        "5y": 5.98
+      }
+    },
+    "period": "October 1, 2026",
+    "source": "Rightmove / Podium average home-buyer rates"
   },
   "latest_bands": {
     "headline_cpi": "NEUTRAL",
@@ -49,46 +86,58 @@
     "wage_growth": "LOWER",
     "unemployment": "NEUTRAL",
     "swap_2y": "NEUTRAL",
-    "swap_5y": "NEUTRAL"
+    "swap_5y": "NEUTRAL",
+    "gilt_2y": "NEUTRAL",
+    "gilt_5y": "NEUTRAL",
+    "gilt_10y": "NEUTRAL"
   },
-  "latest_pressure_index": -0.1579,
+  "latest_pressure_index": -0.1071,
   "latest_forecast": {
     "6 months": {
-      "mortgage_2y_mid": 5.06,
+      "mortgage_2y_mid": 5.1,
       "mortgage_2y_range": [
-        4.81,
-        5.31
+        4.8,
+        5.4
       ],
-      "mortgage_5y_mid": 5.12,
+      "mortgage_5y_mid": 5.15,
       "mortgage_5y_range": [
-        4.87,
-        5.37
+        4.85,
+        5.45
       ]
     },
     "12 months": {
-      "mortgage_2y_mid": 4.72,
+      "mortgage_2y_mid": 4.76,
       "mortgage_2y_range": [
-        4.42,
-        5.02
+        4.41,
+        5.11
       ],
-      "mortgage_5y_mid": 4.83,
+      "mortgage_5y_mid": 4.86,
       "mortgage_5y_range": [
-        4.53,
-        5.13
+        4.51,
+        5.21
       ]
     },
     "2 years": {
-      "mortgage_2y_mid": 4.29,
+      "mortgage_2y_mid": 4.32,
       "mortgage_2y_range": [
-        3.94,
-        4.64
+        3.87,
+        4.77
       ],
-      "mortgage_5y_mid": 4.45,
+      "mortgage_5y_mid": 4.47,
       "mortgage_5y_range": [
-        4.1,
-        4.8
+        4.02,
+        4.92
       ]
     }
+  },
+  "latest_decision_view": {
+    "ltv": 60,
+    "current_2y": 5.1,
+    "current_5y": 5.08,
+    "break_even_refi_rate": 4.89,
+    "model_refi_proxy": 4.39,
+    "margin": 0.5,
+    "signal": "Modelled future refinancing rates are below the 2Y-vs-5Y break-even."
   },
   "alert_anchor": {
     "values": {
@@ -119,19 +168,56 @@
       },
       "bank_rate": {
         "value": 3.75,
-        "period": "2026-09-27",
+        "period": "2026-10-01",
         "source": "Bank of England"
       },
       "swap_2y": {
-        "value": 4.63,
+        "value": 4.6,
         "period": "previous UK business-day close",
         "source": "BlueGamma public SONIA swap table"
       },
       "swap_5y": {
-        "value": 4.79,
+        "value": 4.78,
         "period": "previous UK business-day close",
         "source": "BlueGamma public SONIA swap table"
+      },
+      "gilt_2y": {
+        "value": 4.8,
+        "period": "fallback",
+        "source": "config fallback"
+      },
+      "gilt_5y": {
+        "value": 4.91,
+        "period": "fallback",
+        "source": "config fallback"
+      },
+      "gilt_10y": {
+        "value": 5.4,
+        "period": "fallback",
+        "source": "config fallback"
       }
+    },
+    "mortgage_market": {
+      "rates": {
+        "60": {
+          "2y": 5.1,
+          "5y": 5.08
+        },
+        "75": {
+          "2y": 5.38,
+          "5y": 5.36
+        },
+        "90": {
+          "2y": 5.62,
+          "5y": 5.57
+        },
+        "95": {
+          "2y": 6.03,
+          "5y": 5.98
+        }
+      },
+      "period": "October 1, 2026",
+      "source": "Rightmove / Podium average home-buyer rates"
     },
     "bands": {
       "headline_cpi": "NEUTRAL",
@@ -140,46 +226,58 @@
       "wage_growth": "LOWER",
       "unemployment": "NEUTRAL",
       "swap_2y": "NEUTRAL",
-      "swap_5y": "NEUTRAL"
+      "swap_5y": "NEUTRAL",
+      "gilt_2y": "NEUTRAL",
+      "gilt_5y": "NEUTRAL",
+      "gilt_10y": "NEUTRAL"
     },
     "forecast": {
       "6 months": {
-        "mortgage_2y_mid": 5.08,
+        "mortgage_2y_mid": 5.1,
         "mortgage_2y_range": [
-          4.83,
-          5.33
+          4.8,
+          5.4
         ],
-        "mortgage_5y_mid": 5.13,
+        "mortgage_5y_mid": 5.15,
         "mortgage_5y_range": [
-          4.88,
-          5.38
+          4.85,
+          5.45
         ]
       },
       "12 months": {
-        "mortgage_2y_mid": 4.74,
+        "mortgage_2y_mid": 4.76,
         "mortgage_2y_range": [
-          4.44,
-          5.04
+          4.41,
+          5.11
         ],
-        "mortgage_5y_mid": 4.84,
+        "mortgage_5y_mid": 4.86,
         "mortgage_5y_range": [
-          4.54,
-          5.14
+          4.51,
+          5.21
         ]
       },
       "2 years": {
-        "mortgage_2y_mid": 4.3,
+        "mortgage_2y_mid": 4.32,
         "mortgage_2y_range": [
-          3.95,
-          4.65
+          3.87,
+          4.77
         ],
-        "mortgage_5y_mid": 4.45,
+        "mortgage_5y_mid": 4.47,
         "mortgage_5y_range": [
-          4.1,
-          4.8
+          4.02,
+          4.92
         ]
       }
     },
-    "sent_at": "2026-09-27T21:53:07.533045+00:00"
+    "decision_view": {
+      "ltv": 60,
+      "current_2y": 5.1,
+      "current_5y": 5.08,
+      "break_even_refi_rate": 4.89,
+      "model_refi_proxy": 4.39,
+      "margin": 0.5,
+      "signal": "Modelled future refinancing rates are below the 2Y-vs-5Y break-even."
+    },
+    "sent_at": "2026-10-01T20:56:00.844719+00:00"
   }
 }
