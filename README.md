@@ -1,27 +1,93 @@
-# UK Mortgage Rate Trigger Monitor
+# UK Mortgage Outlook & Decision Monitor
 
-Automated UK mortgage-rate monitor that checks the indicators most likely to change the 6-month, 12-month and 2-year outlook for fixed mortgage rates.
+Automated UK mortgage-rate monitor designed to answer two questions:
+
+1. **What are mortgage rates doing now?**
+2. **What are they likely to be in 6 months, 12 months and 2 years, and what does that imply for fixing decisions?**
 
 ## What it monitors
 
-The workflow currently tracks:
-
+### Economic data
 - Bank of England Bank Rate
 - Headline CPI
 - Core CPI
 - Services CPI
 - Private-sector regular wage growth
 - UK unemployment
+
+### Market pricing
 - 2-year SONIA swap rate
 - 5-year SONIA swap rate
+- 2-year UK gilt yield
+- 5-year UK gilt yield
+- 10-year UK gilt yield
 
-ONS indicators are read from official ONS time-series data. Bank Rate is read from the Bank of England. Public SONIA swap closes are read from BlueGamma's public table; these are normally the previous UK business-day close rather than live intraday prices.
+### Actual mortgage pricing
+The monitor reads average UK home-buyer fixed mortgage rates from Rightmove/Podium for:
+
+- 60% LTV
+- 75% LTV
+- 90% LTV
+- 95% LTV
+
+for both 2-year and 5-year fixes.
+
+If the live mortgage page cannot be read, configured fallback rates are used and the email flags the source warning.
+
+## How the forecast works
+
+SONIA swaps remain the most important direct input because fixed mortgage pricing is closely linked to the relevant swap tenor:
+
+- 2-year fixes are most sensitive to the 2-year SONIA swap
+- 5-year fixes are most sensitive to the 5-year SONIA swap
+
+The model then adjusts for:
+
+- inflation pressure
+- wage pressure
+- unemployment
+- gilt yields / term-premium and fiscal-market stress
+- changes in actual mortgage pricing that may reflect lender margins and competition
+
+Gilts deliberately receive a lower weight than SONIA swaps so correlated bond-market moves are not double-counted excessively.
+
+## Forecast output
+
+Each alert contains scenario-model ranges for:
+
+- 6-month typical 2-year fixed mortgage
+- 6-month typical 5-year fixed mortgage
+- 12-month typical 2-year fixed mortgage
+- 12-month typical 5-year fixed mortgage
+- 2-year-ahead typical 2-year fixed mortgage
+- 2-year-ahead typical 5-year fixed mortgage
+
+These are forecast ranges, not lender quotes.
+
+## Decision guide: 2-year vs 5-year fix
+
+The email now includes a break-even calculation.
+
+Using the assumptions in `config.json`, it calculates the approximate mortgage rate you would need to obtain when refinancing after a 2-year fix for the 2-year route to cost less than taking today's 5-year fix over the same five-year period.
+
+The default illustration is:
+
+- 75% LTV
+- £200,000 repayment mortgage
+- 25-year remaining term
+- £999 2-year product fee
+- £999 5-year product fee
+- £999 refinancing fee after two years
+
+The comparison uses mortgage interest plus fees rather than treating principal repayments as a cost.
+
+The email then compares that break-even rate with a modelled refinancing-rate proxy derived from the 2-year-ahead forecast.
+
+Change these values under `decision_assumptions` in `config.json` when you want the calculation to reflect a real mortgage decision.
 
 ## Trigger levels
 
-Trigger thresholds are kept in `config.json` so they can be changed without editing Python.
-
-Initial thresholds:
+Thresholds are held in `config.json` and can be changed without modifying Python.
 
 | Indicator | Lower-rate signal | Higher-rate signal |
 |---|---:|---:|
@@ -32,23 +98,9 @@ Initial thresholds:
 | Unemployment | >= 5.30% | <= 4.50% |
 | 2Y SONIA swap | <= 4.00% | >= 5.00% |
 | 5Y SONIA swap | <= 4.10% | >= 5.00% |
-
-The swap series have the greatest weight in the forecast model, followed by services inflation and wages.
-
-## Forecast output
-
-When a material trigger fires, the email contains updated ranges for:
-
-- 6-month typical 2-year fixed mortgage
-- 6-month typical 5-year fixed mortgage
-- 12-month typical 2-year fixed mortgage
-- 12-month typical 5-year fixed mortgage
-- 2-year-ahead typical 2-year fixed mortgage
-- 2-year-ahead typical 5-year fixed mortgage
-
-The forecast is calibrated to a mainstream borrower around 75% LTV. It is a scenario-monitoring model rather than a lender quote or a claim of precise future rates.
-
-The forecast anchors and sensitivities are all visible in `config.json`.
+| 2Y gilt yield | <= 4.10% | >= 5.00% |
+| 5Y gilt yield | <= 4.20% | >= 5.20% |
+| 10Y gilt yield | <= 4.70% | >= 5.60% |
 
 ## When it emails
 
@@ -57,60 +109,53 @@ The repository checks twice each UK weekday at approximately:
 - 08:37 Europe/London
 - 18:37 Europe/London
 
-It does **not** email on every run. An email is sent when one or more of these occurs:
+It does not email on every run. An email is sent when one or more material conditions occur, including:
 
-1. An indicator crosses from neutral into a lower-rate or higher-rate trigger band, or moves back out of one.
-2. The 2Y or 5Y SONIA swap has moved by at least **0.15 percentage points cumulatively since the last alert**.
-3. A forecast midpoint moves by at least **0.15 percentage points since the last alert**.
-4. Bank Rate changes by roughly one standard 0.25 percentage-point MPC step.
-5. A monitored source fails and the model has to use its configured fallback value.
+1. A trigger band changes.
+2. A 2Y/5Y SONIA swap moves at least 0.15 percentage points cumulatively since the last alert.
+3. A monitored gilt yield moves at least 0.20 percentage points cumulatively since the last alert.
+4. The configured-LTV average mortgage rate moves at least 0.10 percentage points.
+5. A forecast midpoint moves at least 0.15 percentage points.
+6. Bank Rate changes by approximately one normal 0.25 percentage-point MPC step.
+7. A live source fails and the model falls back to configured values.
 
-The important detail is that swap changes are compared with the **last emailed alert anchor**, not merely the previous run. Several small daily moves therefore accumulate until they become material.
+Changes are measured from the **last emailed alert anchor**, not merely the previous run, so several small moves accumulate until they become material.
 
 ## Email setup
 
-This repository uses the same Gmail/App Password approach as the Soak & Sleep tracker.
+Required GitHub Actions secrets:
 
-Go to:
+- `EMAIL_FROM`
+- `EMAIL_TO`
+- `EMAIL_APP_PASSWORD`
 
-`Repository > Settings > Secrets and variables > Actions > New repository secret`
-
-Create these three repository secrets:
-
-### `EMAIL_FROM`
-The Gmail address that sends the alert.
-
-### `EMAIL_TO`
-The address that receives the alert. It can be the same address.
-
-### `EMAIL_APP_PASSWORD`
-The Google App Password for the Gmail account. Do not use the normal Gmail password.
-
-GitHub does not allow secrets from one repository to be copied automatically into another, so the same three values used by the duvet tracker need to be added here once.
-
-## Test it
-
-After adding the secrets:
+## Testing
 
 1. Open **Actions**.
 2. Select **UK Mortgage Rate Trigger Monitor**.
 3. Select **Run workflow**.
 4. Leave **Send a test/baseline email** enabled.
-5. Run the workflow on `main`.
+5. Run on `main`.
 
-The first successful run writes the current observations and forecast to `state.json` and emails the baseline dashboard.
+The resulting email should contain:
+
+- current mortgage-rate table by LTV
+- 6m / 12m / 2y forecast
+- 2Y-vs-5Y break-even calculation
+- SONIA swaps
+- gilt yields
+- inflation/labour-market dashboard
+- explanation of what changed
 
 ## Files
 
-- `monitor.py` — data collection, trigger logic, forecast calculation and email generation.
-- `config.json` — trigger thresholds, weights, baseline market levels and forecast sensitivities.
-- `state.json` — latest observations plus the last emailed alert anchor.
-- `.github/workflows/mortgage-monitor.yml` — automated schedule and manual test control.
+- `monitor.py` — collection, forecasting, trigger and decision logic
+- `config.json` — thresholds, weights, baseline data and decision assumptions
+- `state.json` — current observations and last emailed alert anchor
+- `.github/workflows/mortgage-monitor.yml` — schedule and manual testing
 
-## Current calibration date
+## Calibration
 
-Initial calibration: **27 September 2026**.
+Major recalibration updated **1 October 2026** to add current mortgage-market pricing and 2Y/5Y/10Y gilt-yield signals.
 
-The baseline was set around Bank Rate 3.75%, headline CPI 3.1%, core CPI 2.6%, services CPI 3.4%, unemployment 4.9%, 2Y SONIA swap 4.63%, and 5Y SONIA swap 4.79%.
-
-As the macro regime changes materially, the thresholds and long-horizon anchors should occasionally be reviewed rather than treated as permanent economic constants.
+This is a monitoring and scenario model. Long-horizon interest-rate forecasts are inherently uncertain and should be used as a structured decision aid rather than treated as a guaranteed future mortgage quote.
