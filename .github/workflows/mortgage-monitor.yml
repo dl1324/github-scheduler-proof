@@ -4,9 +4,6 @@ on:
   schedule:
     - cron: "37 8,18 * * 1-5"
       timezone: "Europe/London"
-  push:
-    paths:
-      - ".mortgage-monitor-test-trigger"
   workflow_dispatch:
     inputs:
       send_test_email:
