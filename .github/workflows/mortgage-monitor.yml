@@ -1,4 +1,4 @@
-name: UK Mortgage Rate Trigger Monitor
+name: UK Mortgage Outlook & Decision Monitor
 
 on:
   schedule:
@@ -36,13 +36,13 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Check triggers and update forecast
+      - name: Check market, compare strategies and update outlook
         env:
           EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
           EMAIL_TO: ${{ secrets.EMAIL_TO }}
           EMAIL_APP_PASSWORD: ${{ secrets.EMAIL_APP_PASSWORD }}
           TEST_EMAIL: ${{ github.event_name == 'workflow_dispatch' && inputs.send_test_email == true }}
-        run: python monitor.py
+        run: python monitor_v3.py
 
       - name: Save monitor state
         run: |
@@ -54,5 +54,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add state.json
-          git commit -m "Update mortgage trigger state"
+          git commit -m "Update mortgage outlook state"
           git push
