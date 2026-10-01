@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-10-01T21:39:52.549009+00:00",
+  "last_checked": "2026-10-01T21:41:39.141608+00:00",
   "model_version": 4,
   "latest_values": {
     "headline_cpi": {
@@ -108,10 +108,10 @@
       "source": "Which? / Moneyfacts daily remortgage table"
     },
     "fixed_10y": {
-      "lender": "Santander",
+      "lender": "Santander UK Plc",
       "rate": 5.21,
-      "fee": 1224,
-      "source": "config fallback"
+      "fee": 1224.0,
+      "source": "HomeOwners Alliance / MAB current remortgage table"
     }
   },
   "flexible_tracker": {
@@ -366,10 +366,10 @@
   },
   "latest_ten_year_view": {
     "fixed_10y": {
-      "lender": "Santander",
+      "lender": "Santander UK Plc",
       "rate": 5.21,
-      "fee": 1224,
-      "source": "config fallback"
+      "fee": 1224.0,
+      "source": "HomeOwners Alliance / MAB current remortgage table"
     },
     "fixed_5y": {
       "lender": "RECOMMENDED PROVIDER NatWest",
