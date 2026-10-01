@@ -39,13 +39,16 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      - name: Validate Python
+        run: python -m py_compile monitor_v3.py monitor_entrypoint.py
+
       - name: Check market, compare strategies and update outlook
         env:
           EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
           EMAIL_TO: ${{ secrets.EMAIL_TO }}
           EMAIL_APP_PASSWORD: ${{ secrets.EMAIL_APP_PASSWORD }}
           TEST_EMAIL: ${{ github.event_name == 'workflow_dispatch' && inputs.send_test_email == true }}
-        run: python monitor_v3.py
+        run: python monitor_entrypoint.py
 
       - name: Save monitor state
         run: |
